@@ -1522,8 +1522,6 @@ body {
     transition-delay: .16s;
 }
 
-
-
 .icon img {
     filter: grayscale(100%) brightness(30%);
     transition: filter 0.3s ease;
