@@ -1521,3 +1521,15 @@ body {
     -webkit-transition-delay: .16s;
     transition-delay: .16s;
 }
+
+
+
+.icon img {
+    filter: grayscale(100%) brightness(30%);
+    transition: filter 0.3s ease;
+    margin-left: 5px; /* Espaçamento opcional entre texto e ícone */
+}
+
+.icon:hover img {
+    filter: grayscale(0%) brightness(100%);
+}
