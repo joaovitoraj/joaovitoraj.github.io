@@ -1,0 +1,18 @@
+{
+  "name": "calculadoras-salario-na-real",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Site estático de calculadoras trabalhistas (salário líquido, CLT x PJ, rescisão, férias e 13º) atualizado para 2026.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test \"tests/*.test.mjs\"",
+    "check": "node scripts/verificar-site.mjs",
+    "e2e": "node scripts/e2e.mjs",
+    "og": "node scripts/gerar-og.mjs",
+    "serve": "node scripts/servidor.mjs"
+  }
+}

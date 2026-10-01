@@ -1,0 +1,10 @@
+export { TABELAS, tabelasVigentes } from './tabelas.js';
+export { arred, paraNumero, inteiro } from './dinheiro.js';
+export { calcularINSS, calcularINSSProLabore } from './inss.js';
+export { calcularIRRF, reducaoLei15270, faixaIRRF } from './irrf.js';
+export { calcularSalarioLiquido } from './salario.js';
+export { calcularFerias } from './ferias.js';
+export { calcularDecimoTerceiro } from './decimo-terceiro.js';
+export { calcularRescisao, TIPOS_RESCISAO, AVISOS_POR_TIPO } from './rescisao.js';
+export { calcularPJ, calcularCLTAnual, compararCltPj, aliquotaEfetivaSimples } from './pj.js';
+export { gerarPixCopiaECola, crc16 } from './pix.js';

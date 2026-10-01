@@ -1,0 +1,47 @@
+name: Lembrete anual das tabelas
+
+# Todo começo de ano o governo publica o novo salário mínimo e a nova tabela do INSS.
+# Este fluxo abre uma issue com o passo a passo para atualizar as calculadoras.
+on:
+  schedule:
+    - cron: '0 12 8 1 *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  lembrar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const ano = new Date().getUTCFullYear();
+            const title = `Atualizar as tabelas das calculadoras para ${ano}`;
+            const abertas = await github.paginate(github.rest.issues.listForRepo, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              per_page: 100,
+            });
+            if (abertas.some((i) => i.title === title)) {
+              core.info('Lembrete deste ano já existe.');
+              return;
+            }
+            const body = [
+              `As calculadoras usam tabelas com validade até 31/12/${ano - 1}. Desde 1º de janeiro, o site mostra um aviso de que os valores podem estar desatualizados.`,
+              '',
+              'Atualize `calculadoras-src/src/engine/tabelas.js`:',
+              '',
+              `- [ ] Salário mínimo de ${ano}`,
+              `- [ ] Tabela do INSS de ${ano} (portaria interministerial MPS/MF de janeiro) e teto`,
+              '- [ ] Tabela do IRRF, dedução por dependente, desconto simplificado e regra de redução (se mudaram)',
+              '- [ ] Anexos do Simples Nacional, Lucro Presumido e regras de dividendos (se mudaram)',
+              `- [ ] \`ano\` e \`vigencia\` para ${ano}`,
+              '- [ ] Atualizar os valores esperados em `tests/engine.test.mjs` e rodar `npm test`',
+              '- [ ] `atualizadoEm` em `site.config.mjs`, `npm run og`, `npm run build` e commit',
+              '',
+              `Atalho: abra uma sessão do Claude Code neste repositório e peça "atualize as tabelas das calculadoras para ${ano}".`,
+            ].join('\n');
+            await github.rest.issues.create({ owner: context.repo.owner, repo: context.repo.repo, title, body });

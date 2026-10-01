@@ -1,0 +1,5 @@
+# Gerado por calculadoras-src/build.mjs
+User-agent: *
+Allow: /
+
+Sitemap: https://joaovitoraj.github.io/calculadoras/sitemap.xml

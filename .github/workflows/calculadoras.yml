@@ -1,0 +1,71 @@
+name: Calculadoras
+
+on:
+  push:
+    paths:
+      - 'calculadoras-src/**'
+      - 'calculadoras/**'
+      - 'robots.txt'
+      - 'ads.txt'
+      - '.github/workflows/calculadoras.yml'
+  pull_request:
+    paths:
+      - 'calculadoras-src/**'
+      - 'calculadoras/**'
+      - 'robots.txt'
+      - 'ads.txt'
+      - '.github/workflows/calculadoras.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: calculadoras-src
+
+jobs:
+  testes:
+    name: Testes, build e verificação
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Testes do motor de cálculo
+        run: npm test
+      - name: Gerar o site
+        run: npm run build
+      - name: Site publicado está igual ao gerado
+        run: |
+          if [ -n "$(git status --porcelain -- ..)" ]; then
+            git status --short -- ..
+            echo "::error::Os arquivos publicados estão desatualizados. Rode 'npm run build' em calculadoras-src e faça commit do resultado."
+            exit 1
+          fi
+      - name: Verificar links, SEO e sitemap
+        run: npm run check
+
+  navegador:
+    name: Teste no navegador
+    needs: testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Instalar Playwright
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Testar as calculadoras no Chromium
+        run: npm run e2e -- ../e2e-capturas
+      - name: Guardar capturas de tela
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-calculadoras
+          path: e2e-capturas
+          retention-days: 7
